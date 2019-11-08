@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
+import GenerateJoke from './GenerateJoke';
+import DisplayJoke from './DisplayJoke';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    const sampleJoke = {
+      pic: '',
+      quote: '',
+    };
+
+    this.state = {
+      Joke: sampleJoke ,
+    };
+
+  }
+  
+  getJoke() {
+    // Employee collection via fetch
+    fetch("https://api.chucknorris.io/jokes/random")
+      .then(response => response.json())
+      .then(data => {
+        let jokeInf = {
+          pic: data.icon_url,
+          quote: data.value,
+        }
+        // Once the data is collected, we update our state with the new data
+        this.setState({
+          Joke: jokeInf,
+        });
+      });
+  }
+
+  render() {
+
+    return (
+      <div className="App">
+        <GenerateJoke selectJoke={() => this.getJoke()} /> 
+        <DisplayJoke Joke={this.state.Joke} />
+
+      </div>
+    );
+  }
 }
 
 export default App;
